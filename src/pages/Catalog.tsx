@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -289,64 +290,72 @@ const Catalog = () => {
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                   {filteredBooks.map((book) => (
-                    <Card
-                      key={book.id}
-                      className="overflow-hidden hover:shadow-lg transition-all duration-300 hover-scale"
-                    >
-                      <div className="relative">
-                        <img
-                          src={book.image}
-                          alt={book.title}
-                          className="w-full h-64 object-cover"
-                        />
-                        {book.discount && (
-                          <Badge className="absolute top-3 right-3 bg-accent">
-                            -{book.discount}%
-                          </Badge>
-                        )}
-                        {book.isNew && (
-                          <Badge className="absolute top-3 right-3 bg-primary">Новинка</Badge>
-                        )}
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute top-3 left-3 bg-white/90 hover:bg-white"
-                          onClick={() => toggleFavorite(book.id)}
-                        >
-                          <Icon
-                            name="Heart"
-                            size={20}
-                            className={
-                              favorites.includes(book.id) ? 'fill-accent text-accent' : ''
-                            }
+                    <Link to={`/book/${book.id}`} key={book.id}>
+                      <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 hover-scale">
+                        <div className="relative">
+                          <img
+                            src={book.image}
+                            alt={book.title}
+                            className="w-full h-64 object-cover"
                           />
-                        </Button>
-                      </div>
-                      <CardContent className="pt-4">
-                        <Badge variant="outline" className="mb-2 text-xs">
-                          {book.genre}
-                        </Badge>
-                        <h3 className="font-semibold text-lg mb-1 line-clamp-2">{book.title}</h3>
-                        <p className="text-sm text-muted-foreground mb-2">{book.author}</p>
-                        <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
-                          {book.description}
-                        </p>
-                        <div className="flex items-center gap-2">
-                          <span className="text-2xl font-bold text-primary">{book.price} ₽</span>
-                          {book.oldPrice && (
-                            <span className="text-sm text-muted-foreground line-through">
-                              {book.oldPrice} ₽
-                            </span>
+                          {book.discount && (
+                            <Badge className="absolute top-3 right-3 bg-accent">
+                              -{book.discount}%
+                            </Badge>
                           )}
+                          {book.isNew && (
+                            <Badge className="absolute top-3 right-3 bg-primary">Новинка</Badge>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute top-3 left-3 bg-white/90 hover:bg-white"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              toggleFavorite(book.id);
+                            }}
+                          >
+                            <Icon
+                              name="Heart"
+                              size={20}
+                              className={
+                                favorites.includes(book.id) ? 'fill-accent text-accent' : ''
+                              }
+                            />
+                          </Button>
                         </div>
-                      </CardContent>
-                      <CardFooter>
-                        <Button className="w-full" onClick={() => addToCart(book)}>
-                          <Icon name="ShoppingCart" size={16} className="mr-2" />
-                          В корзину
-                        </Button>
-                      </CardFooter>
-                    </Card>
+                        <CardContent className="pt-4">
+                          <Badge variant="outline" className="mb-2 text-xs">
+                            {book.genre}
+                          </Badge>
+                          <h3 className="font-semibold text-lg mb-1 line-clamp-2">{book.title}</h3>
+                          <p className="text-sm text-muted-foreground mb-2">{book.author}</p>
+                          <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
+                            {book.description}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl font-bold text-primary">{book.price} ₽</span>
+                            {book.oldPrice && (
+                              <span className="text-sm text-muted-foreground line-through">
+                                {book.oldPrice} ₽
+                              </span>
+                            )}
+                          </div>
+                        </CardContent>
+                        <CardFooter>
+                          <Button
+                            className="w-full"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addToCart(book);
+                            }}
+                          >
+                            <Icon name="ShoppingCart" size={16} className="mr-2" />
+                            В корзину
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    </Link>
                   ))}
                 </div>
               )}

@@ -7,7 +7,8 @@ import Icon from '@/components/ui/icon';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { books as allBooks } from '@/data/books';
+import { books as allBooks, Book } from '@/data/books';
+import { blogPosts } from '@/data/blogPosts';
 
 const books = allBooks.slice(0, 6);
 
@@ -31,7 +32,7 @@ const Index = () => {
     }
   };
 
-  const cartTotal = cart.reduce((sum, book) => sum + book.price, 0);
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,53 +103,64 @@ const Index = () => {
             {books
               .filter((book) => book.discount)
               .map((book) => (
-                <Card key={book.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover-scale">
-                  <div className="relative">
-                    <img
-                      src={book.image}
-                      alt={book.title}
-                      className="w-full h-64 object-cover"
-                    />
-                    {book.discount && (
-                      <Badge className="absolute top-3 right-3 bg-accent">
-                        -{book.discount}%
-                      </Badge>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-3 left-3 bg-white/90 hover:bg-white"
-                      onClick={() => toggleFavorite(book.id)}
-                    >
-                      <Icon
-                        name="Heart"
-                        size={20}
-                        className={favorites.includes(book.id) ? 'fill-accent text-accent' : ''}
+                <Link to={`/book/${book.id}`} key={book.id}>
+                  <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 hover-scale">
+                    <div className="relative">
+                      <img
+                        src={book.image}
+                        alt={book.title}
+                        className="w-full h-64 object-cover"
                       />
-                    </Button>
-                  </div>
-                  <CardContent className="pt-4">
-                    <Badge variant="outline" className="mb-2">
-                      {book.category}
-                    </Badge>
-                    <h3 className="font-semibold text-lg mb-1">{book.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-3">{book.author}</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-primary">{book.price} ₽</span>
-                      {book.oldPrice && (
-                        <span className="text-sm text-muted-foreground line-through">
-                          {book.oldPrice} ₽
-                        </span>
+                      {book.discount && (
+                        <Badge className="absolute top-3 right-3 bg-accent">
+                          -{book.discount}%
+                        </Badge>
                       )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-3 left-3 bg-white/90 hover:bg-white"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleFavorite(book.id);
+                        }}
+                      >
+                        <Icon
+                          name="Heart"
+                          size={20}
+                          className={favorites.includes(book.id) ? 'fill-accent text-accent' : ''}
+                        />
+                      </Button>
                     </div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button className="w-full" onClick={() => addToCart(book)}>
-                      <Icon name="ShoppingCart" size={16} className="mr-2" />
-                      В корзину
-                    </Button>
-                  </CardFooter>
-                </Card>
+                    <CardContent className="pt-4">
+                      <Badge variant="outline" className="mb-2">
+                        {book.category}
+                      </Badge>
+                      <h3 className="font-semibold text-lg mb-1">{book.title}</h3>
+                      <p className="text-sm text-muted-foreground mb-3">{book.author}</p>
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl font-bold text-primary">{book.price} ₽</span>
+                        {book.oldPrice && (
+                          <span className="text-sm text-muted-foreground line-through">
+                            {book.oldPrice} ₽
+                          </span>
+                        )}
+                      </div>
+                    </CardContent>
+                    <CardFooter>
+                      <Button
+                        className="w-full"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addToCart(book);
+                        }}
+                      >
+                        <Icon name="ShoppingCart" size={16} className="mr-2" />
+                        В корзину
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </Link>
               ))}
           </div>
         </div>
@@ -291,48 +303,59 @@ const Index = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Популярное</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {books.slice(0, 3).map((book) => (
-              <Card key={book.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 hover-scale">
-                <div className="relative">
-                  <img
-                    src={book.image}
-                    alt={book.title}
-                    className="w-full h-64 object-cover"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-3 left-3 bg-white/90 hover:bg-white"
-                    onClick={() => toggleFavorite(book.id)}
-                  >
-                    <Icon
-                      name="Heart"
-                      size={20}
-                      className={favorites.includes(book.id) ? 'fill-accent text-accent' : ''}
+              <Link to={`/book/${book.id}`} key={book.id}>
+                <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 hover-scale">
+                  <div className="relative">
+                    <img
+                      src={book.image}
+                      alt={book.title}
+                      className="w-full h-64 object-cover"
                     />
-                  </Button>
-                </div>
-                <CardContent className="pt-4">
-                  <Badge variant="outline" className="mb-2">
-                    {book.category}
-                  </Badge>
-                  <h3 className="font-semibold text-lg mb-1">{book.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-3">{book.author}</p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold text-primary">{book.price} ₽</span>
-                    {book.oldPrice && (
-                      <span className="text-sm text-muted-foreground line-through">
-                        {book.oldPrice} ₽
-                      </span>
-                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-3 left-3 bg-white/90 hover:bg-white"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleFavorite(book.id);
+                      }}
+                    >
+                      <Icon
+                        name="Heart"
+                        size={20}
+                        className={favorites.includes(book.id) ? 'fill-accent text-accent' : ''}
+                      />
+                    </Button>
                   </div>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full" onClick={() => addToCart(book)}>
-                    <Icon name="ShoppingCart" size={16} className="mr-2" />
-                    В корзину
-                  </Button>
-                </CardFooter>
-              </Card>
+                  <CardContent className="pt-4">
+                    <Badge variant="outline" className="mb-2">
+                      {book.category}
+                    </Badge>
+                    <h3 className="font-semibold text-lg mb-1">{book.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-3">{book.author}</p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl font-bold text-primary">{book.price} ₽</span>
+                      {book.oldPrice && (
+                        <span className="text-sm text-muted-foreground line-through">
+                          {book.oldPrice} ₽
+                        </span>
+                      )}
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button
+                      className="w-full"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addToCart(book);
+                      }}
+                    >
+                      <Icon name="ShoppingCart" size={16} className="mr-2" />
+                      В корзину
+                    </Button>
+                  </CardFooter>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>
@@ -342,42 +365,22 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-bold mb-8">Новости и события</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="pt-6">
-                <div className="text-sm text-muted-foreground mb-2">15 января 2026</div>
-                <h3 className="text-xl font-semibold mb-3">Крещение Господне: история и традиции</h3>
-                <p className="text-muted-foreground mb-4">
-                  Узнайте больше о великом празднике Крещения и духовных книгах, посвященных этому событию...
-                </p>
-                <Button variant="link" className="p-0">
-                  Читать далее →
-                </Button>
-              </CardContent>
-            </Card>
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="pt-6">
-                <div className="text-sm text-muted-foreground mb-2">10 января 2026</div>
-                <h3 className="text-xl font-semibold mb-3">Новые поступления святоотеческой литературы</h3>
-                <p className="text-muted-foreground mb-4">
-                  В нашем каталоге появились редкие издания творений святых отцов Церкви...
-                </p>
-                <Button variant="link" className="p-0">
-                  Читать далее →
-                </Button>
-              </CardContent>
-            </Card>
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="pt-6">
-                <div className="text-sm text-muted-foreground mb-2">5 января 2026</div>
-                <h3 className="text-xl font-semibold mb-3">Как выбрать духовную книгу для ребенка</h3>
-                <p className="text-muted-foreground mb-4">
-                  Советы по выбору православной литературы для детей разного возраста...
-                </p>
-                <Button variant="link" className="p-0">
-                  Читать далее →
-                </Button>
-              </CardContent>
-            </Card>
+            {blogPosts.map((post) => (
+              <Link to={`/blog/${post.id}`} key={post.id}>
+                <Card className="hover:shadow-lg transition-shadow h-full">
+                  <CardContent className="pt-6">
+                    <div className="text-sm text-muted-foreground mb-2">{post.date}</div>
+                    <h3 className="text-xl font-semibold mb-3">{post.title}</h3>
+                    <p className="text-muted-foreground mb-4">
+                      {post.preview}
+                    </p>
+                    <Button variant="link" className="p-0">
+                      Читать далее →
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
